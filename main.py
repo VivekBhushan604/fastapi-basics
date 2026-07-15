@@ -1,6 +1,23 @@
 from fastapi import FastAPI, HTTPException, status
+from pydantic import BaseModel,EmailStr,Field
 
 app = FastAPI()
+
+#Day21
+
+@app.get("/")
+def home():
+    return {"message": "Welcome to FastAPI!"}
+
+
+@app.get("/about")
+def about():
+    return {
+        "name": "Vivek Bhushan",
+        "title": "AI/ML Intern"
+    }
+
+# Day22
 
 students = {
     1: {
@@ -17,19 +34,6 @@ students = {
     }
 }
 
-@app.get("/")
-def home():
-    return {"message": "Welcome to FastAPI!"}
-
-
-@app.get("/about")
-def about():
-    return {
-        "name": "Vivek Bhushan",
-        "title": "AI/ML Intern"
-    }
-
-
 @app.get("/students")
 def get_students():
     return students
@@ -45,6 +49,7 @@ def get_student(student_id: int):
 
     return students[student_id]
 
+# Day23
 
 @app.get("/calculate")
 def calculate(num1: float, num2: float, operation: str):
@@ -72,4 +77,19 @@ def calculate(num1: float, num2: float, operation: str):
         "num2": num2,
         "operation": operation,
         "result": result
+    }
+
+# Day24
+
+class User(BaseModel):
+    name: str
+    email: EmailStr
+    password: str = Field(..., min_length=8)
+
+@app.post("/register")
+def register_user(user: User):
+    return {
+        "message": "User registered successfully",
+        "name": user.name,
+        "email": user.email
     }
